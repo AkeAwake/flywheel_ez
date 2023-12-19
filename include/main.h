@@ -83,7 +83,7 @@ void opcontrol(void);
 #include "CustomHeaders/globals.hpp"
 #include "CustomHeaders/intake.hpp"
 #include "CustomHeaders/wings.hpp"
-#include "CustomHeaders/catapult.hpp"
+#include "CustomHeaders/flywheel.hpp"
 #include "CustomHeaders/matchload.hpp"
 /**
  * You can add C++-only headers here
