@@ -11,6 +11,7 @@ extern pros::Motor backLeft;
 extern pros::Motor backRight;
 extern pros::Motor Flywheel;
 extern pros::Motor Intake;
+extern pros::Motor Kicker2;
 
 //Sensors
 //extern pros::ADIAnalogIn liftPot;

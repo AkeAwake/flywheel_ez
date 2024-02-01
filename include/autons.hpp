@@ -16,6 +16,18 @@ void rightwingintask();
 
 void rightwingouttask();
 
+void backwingintask();
+
+void backwingouttask();
+
+void backleftwingintask();
+
+void backleftwingouttask();
+
+void backrightwingintask();
+
+void backrightwingouttask();
+
 void drivermacro();
 
 void start();

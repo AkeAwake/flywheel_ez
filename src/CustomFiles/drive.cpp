@@ -7,7 +7,7 @@ void setBrakes() {
   middleLeft.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   backRight.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   backLeft.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-  Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+  //Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
   Intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
 

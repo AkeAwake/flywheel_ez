@@ -3,7 +3,7 @@
 bool intaketoggle = false;
 bool pressed = false;
 
-pros::Rotation rotation_sensor(15);
+// pros::Rotation rotation_sensor(15);
 
 void setIntake(){
 

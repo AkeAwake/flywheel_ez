@@ -26,7 +26,7 @@ bool flypressed2 = false;
 bool blockerToggle = false;
 bool pressedBlockerToggle = false;
 
-int setCatapult() {
+int setFlywheel() {
     int error = target - currentRPM;
 
     double proportional = proportionalGain * error;
@@ -169,7 +169,7 @@ int topheight = 145;
 // This is the height to intake at
 //int degree2 = 110;
 
-int setCatapult(){
+int setFlywheel(){
     
     /*pros::delay(100);
     master.clear();

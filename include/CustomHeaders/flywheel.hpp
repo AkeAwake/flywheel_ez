@@ -2,7 +2,7 @@
 #include "api.h"
 #include "EZ-Template/api.hpp"
 
-int setCatapult();
+int setFlywheel();
 
 
 int autocata();

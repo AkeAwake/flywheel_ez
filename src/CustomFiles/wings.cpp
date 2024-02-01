@@ -10,15 +10,18 @@ bool pressedLeftToggle = false;
 bool rightToggle = false;
 bool pressedRightToggle = false;
 
+bool backToggle = false;
+bool pressedBackToggle = false;
+
 //bool blockerToggle = false;
 //bool pressedBlockerToggle = false;
 
 // Digital outputs for different mechanisms
-pros::ADIDigitalOut leftWing('F', false);
-pros::ADIDigitalOut rightWing('A', false);
-pros::ADIDigitalOut hangRelease('C', false);
-pros::ADIDigitalOut hangUp('G', false);
-pros::ADIDigitalOut hangDown('H', false);
+pros::ADIDigitalOut leftWing('A', false);
+pros::ADIDigitalOut backleftWing('F', false);
+pros::ADIDigitalOut backrightWing('B', false);
+pros::ADIDigitalOut parkHang('D', false);
+pros::ADIDigitalOut rightWing('E', false);
 
 // Function to set the states of wings and other mechanisms
 void setWings() {
@@ -43,6 +46,17 @@ void setWings() {
 
     if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2) || !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
         pressedWingToggle = false;
+        //pros::delay(100);
+    }
+
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) && controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) && !pressedBackToggle) {
+        backToggle = !backToggle;
+        pressedBackToggle = true;
+        //pros::delay(100);
+    }
+
+    if (!controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) || !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        pressedBackToggle = false;
         //pros::delay(100);
     }
 
@@ -92,6 +106,18 @@ void setWings() {
         //pros::delay(100);
     }
 
+    if (backToggle) {
+
+        backleftWing.set_value(true);
+        backrightWing.set_value(true);
+
+    } else if (!backToggle) {
+
+        backleftWing.set_value(false);
+        backrightWing.set_value(false);
+
+    }
+
     // Set blocker state based on blockerToggle
     /*if (blockerToggle) {
         hangUp.set_value(true);
@@ -100,13 +126,11 @@ void setWings() {
     }*/
 
     // Manual control for hang mechanism
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-        hangUp.set_value(false);
-        pros::delay(300);
-        hangRelease.set_value(true);
-        pros::delay(300);
-        hangDown.set_value(true);
-    }
+    /*if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+        parkHang.set_value(true);
+        pros::delay(700);
+        parkHang.set_value(false);
+    }*/
 }
 
 // Function to turn on both wings

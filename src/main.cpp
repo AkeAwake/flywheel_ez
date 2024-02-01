@@ -4,6 +4,7 @@
 #include "CustomHeaders/intake.hpp"
 #include "CustomHeaders/wings.hpp"
 #include "CustomHeaders/flywheel.hpp"
+#include "CustomHeaders/kicker.hpp"
 #include "CustomHeaders/matchload.hpp"
 #include "autoSelect/selection.h"
 #include "CustomHeaders/drive.hpp"
@@ -20,11 +21,11 @@
 Drive chassis (
   // Left Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-13, -17, -16}
+  {-1, -12, -15}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{10, 18, 15}
+  ,{10, 19, 17}
 
   // IMU Port
   ,14
@@ -74,15 +75,10 @@ void initialize() {
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
   // Configure your chassis controls
-  //chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
+  chassis.toggle_modify_curve_with_controller(false);
   //chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
-  //chassis.set_curve_default(0, 0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)  
   default_constants(); // Set the drive to your own constants from autons.cpp!
   exit_condition_defaults(); // Set the exit conditions to your own constants from autons.cpp!
-
-  // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
-  // chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used. 
-  // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
 
   // Autonomous Selector using LLEMU
   /*ez::as::auton_selector.add_autons({
@@ -97,8 +93,8 @@ void initialize() {
 
   // Initialize chassis and auton selector
   chassis.initialize();
-  //ez::as::initialize();
-  selector::init();
+  ez::as::initialize();
+  //selector::init();
 }
 
 
@@ -195,6 +191,8 @@ void autonomous() {
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+  //master.clear();
+  //Intake.tare_position();
 
   while (true) {
 
@@ -206,15 +204,22 @@ void opcontrol() {
 
 
     //debugtest();
-    setCatapult();
-    setIntake();
+    setKicker();
+    //setHang();
+    //setIntake();
     setWings();
     setBrakes();
 
-    /*pros::delay(100);
-    master.clear();
-    pros::delay(100);
-    master.print(0, 0, "speed %d", Flywheel.get_voltage());*/
+    //Intake = 12.7;
+    //pros::delay(100);
+    //pros::lcd::clear();
+    //master.clear();
+    //pros::delay(100);
+    
+    //master.print(0, 0, "speed %d", Flywheel.get_voltage());
+    //std::uint32_t now = pros::millis();
+    //master.print(0,0, "pose: %d", Intake.get_position());
+    //pros::lcd::print(0, "volts: %d", Intake.get_position());
     
     //setMatchload();
     // . . .
@@ -223,7 +228,8 @@ void opcontrol() {
 
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
 
-      drivermacro();
+      Flywheel = 127;
+      Kicker2 = 127;
 
     }
 

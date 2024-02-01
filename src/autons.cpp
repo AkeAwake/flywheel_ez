@@ -2,9 +2,12 @@
 #include "pros/imu.h"
 #include "pros/screen.h"
 
-pros::ADIDigitalOut lWing('F', false);
-pros::ADIDigitalOut rWing('A', false);
-pros::ADIDigitalOut blocker('G', false);
+pros::ADIDigitalOut lWing('A', false);
+pros::ADIDigitalOut blWing('F', false);
+pros::ADIDigitalOut brWing('B', false);
+pros::ADIDigitalOut parkhang('G', false);
+pros::ADIDigitalOut rWing('E', false);
+//pros::ADIDigitalOut blocker('G', false);
 
 
 void tug (int attempts) {
@@ -41,6 +44,20 @@ void wingouttask(){
 
 }
 
+void backwingintask(){
+
+  brWing.set_value(false);
+  blWing.set_value(false);
+
+}
+
+void backwingouttask(){
+
+  brWing.set_value(true);
+  blWing.set_value(true);
+
+}
+
 void leftwingouttask(){
 
   lWing.set_value(true);
@@ -62,6 +79,30 @@ void rightwingouttask(){
 void rightwingintask(){
 
   rWing.set_value(false);
+
+}
+
+void backleftwingouttask(){
+
+  blWing.set_value(true);
+
+}
+
+void backleftwingintask(){
+
+  blWing.set_value(false);
+
+}
+
+void backrightwingouttask(){
+
+  brWing.set_value(true);
+
+}
+
+void backrightwingintask(){
+
+  brWing.set_value(false);
 
 }
 
@@ -191,7 +232,7 @@ void fiveball() {
   chassis.set_drive_pid(-63, 127, true);
   chassis.wait_drive();
 
-  leftwingouttask();
+  backleftwingouttask();
 
   chassis.set_swing_pid(ez::LEFT_SWING, -77, 127);
   chassis.wait_drive();
@@ -199,7 +240,7 @@ void fiveball() {
   chassis.set_drive_pid(-15, 127, true);
   chassis.wait_drive();
 
-  leftwingintask();
+  backleftwingintask();
   //lWing.set_value(false);
 
   chassis.set_turn_pid(-75, 127);
@@ -268,7 +309,7 @@ void fiveball() {
   chassis.set_turn_pid(-291, 127);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(50, 127, true);
+  chassis.set_drive_pid(45, 127, true);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-180, 127);
@@ -412,31 +453,47 @@ void AWPUnder() {
 }
 
 void RushNear(){
-
+  
   //chassis.set_turn_pid(18, 127);
   //chassis.wait_drive();
 
   pros::Task starttask(start);
 
+  /*chassis.set_turn_pid(85, 127);
+  chassis.wait_drive();
+
+  pros::delay(1000000);*/
+
   chassis.set_drive_pid(100, 127, false);
   chassis.wait_drive();
 
-  lWing.set_value(false);
-
-  chassis.set_drive_pid(-13, 127, true);
+  chassis.set_turn_pid(0, 127);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(72, 127);
+  //pros::delay(1000000);
+
+  //blWing.set_value(false);
+
+//  chassis.set_drive_pid(-10, 127, true);
+//  chassis.wait_drive();
+
+  chassis.set_turn_pid(85, 127);
   chassis.wait_drive();
 
-  Intake = -127;
+  lWing.set_value(true);
+
+ // Intake = -127;
 
   //lWing.set_value(true);
 
-  chassis.set_drive_pid(47, 127, true);
+  chassis.set_drive_pid(30, 110, true);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-10, 127, true);
+  //pros::delay(400);
+
+//  Intake = 0;
+
+  /*chassis.set_drive_pid(-10, 127, true);
   chassis.wait_drive();
 
   chassis.set_turn_pid(10, 127);
@@ -459,47 +516,82 @@ void RushNear(){
   chassis.wait_drive();
 
   chassis.set_drive_pid(23, 127, true);
+  chassis.wait_drive();*/
+
+  chassis.set_drive_pid(-15, 127, true);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-23, 127, true);
+  lWing.set_value(false);
+
+  chassis.set_turn_pid(20, 127);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(27, 127);
-  chassis.wait_drive();
-
-  chassis.set_drive_pid(-68, 127, true);
+  chassis.set_drive_pid(-70, 127, true);
   chassis.wait_drive();
 
   chassis.set_swing_pid(ez::RIGHT_SWING, 162, 127);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-25, 127, true);
+  //backrightwingouttask();
+
+  chassis.set_drive_pid(-36, 127, true);
   chassis.wait_drive();
 
-  chassis.set_turn_pid(155, 127);
+  //backrightwingintask();
+
+  chassis.set_swing_pid(ez::RIGHT_SWING, 130, -127);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(23, 127, true);
+  chassis.set_drive_pid(39, 127, true);
   chassis.wait_drive();
 
-  rWing.set_value(true);
+//  chassis.set_turn_pid(-17, 127);
+//  chassis.wait_drive();
+
+  brWing.set_value(true);
 
   //chassis.set_swing_pid(ez::RIGHT_SWING, 94, 127);
   //chassis.wait_drive();
 
-  chassis.set_swing_pid(ez::RIGHT_SWING, 45, 127);
+  chassis.set_turn_pid(0, 127);
   chassis.wait_drive();
 
-  rWing.set_value(false);
-  lWing.set_value(true);
+  brWing.set_value(false);
 
-  chassis.set_turn_pid(85, 127);
+  chassis.set_turn_pid(102, 127);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(80, 127, true);
+  Intake = -127;
+
+  chassis.set_drive_pid(35, 127, true);
   chassis.wait_drive();
 
-  //lWing.set_value(true);
+  Intake = 0;
+
+  chassis.set_turn_pid(250, 127);
+  chassis.wait_drive();
+
+  brWing.set_value(true);
+
+  //CHANGE THIS TO -44 FOR NEXT COMP
+  chassis.set_drive_pid(-24, 127, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(260, 127);
+  chassis.wait_drive();
+
+ /* chassis.set_drive_pid(-25, 127, true);
+  chassis.wait_drive();
+
+  chassis.set_turn_pid(-117, 127);
+  chassis.wait_drive();
+
+  blWing.set_value(true);
+
+  chassis.set_drive_pid(-50, 50, true);
+  chassis.wait_drive();
+
+  //lWing.set_value(true);*/
 
 }
 
@@ -571,7 +663,7 @@ void RushNearElims(){
   chassis.set_swing_pid(ez::RIGHT_SWING, 55, 127);
   chassis.wait_drive();
 
-  blocker.set_value(true);
+  //blocker.set_value(true);
 
   /*chassis.set_turn_pid(155, 127);
   chassis.wait_drive();
@@ -596,7 +688,7 @@ void RushNearElims(){
   chassis.set_drive_pid(-20, 127, true);
   chassis.wait_drive();*/
 
-  blocker.set_value(true);
+  //blocker.set_value(true);
 
   //lWing.set_value(true);
 
@@ -692,10 +784,13 @@ void skills(){
   chassis.set_drive_pid(15, 127, true);
   chassis.wait_drive();
 
-  Flywheel = 127;
+  Flywheel = 92.25;
+  Kicker2 = 92.25;
 
   chassis.set_turn_pid(-111, 127);
   chassis.wait_drive();
+
+  backrightwingouttask();
 
   chassis.set_drive_pid(-10, 127, true);
   chassis.wait_drive();
@@ -704,13 +799,19 @@ void skills(){
 
   Intake = 0;
   
-  blocker.set_value(true);
+  //blocker.set_value(true);
 
-  pros::delay(27000);
+  pros::delay(30000);
 
   Flywheel = 0;
+  Kicker2 = 0;
 
-  blocker.set_value(false);
+  backrightwingintask();
+
+  //chassis.set_drive_pid(-10, 127, true);
+  //chassis.wait_drive();
+
+  //blocker.set_value(false);
 
   chassis.set_turn_pid(-45, 127);
   chassis.wait_drive();
@@ -723,7 +824,7 @@ void skills(){
 
   Intake = -127;
 
-  chassis.set_drive_pid(155, 127, true);
+  chassis.set_drive_pid(140, 127, true);
   chassis.wait_drive();
 
   Intake = 0;
@@ -731,7 +832,7 @@ void skills(){
   chassis.set_swing_pid(ez::RIGHT_SWING, -135, 127);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(20, 127, true);
+  chassis.set_drive_pid(28, 127, true);
   chassis.wait_drive();
 
   chassis.set_swing_pid(ez::RIGHT_SWING, -180, 127);
@@ -742,7 +843,7 @@ void skills(){
   chassis.set_drive_pid(35, 127, true);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(-15, 127, true);
+  chassis.set_drive_pid(-35, 127, true);
   chassis.wait_drive();
 
   chassis.set_drive_pid(30, 127, true);
@@ -779,7 +880,7 @@ void skills(){
   chassis.set_turn_pid(-180, 127);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(30, 127, true);
+  chassis.set_drive_pid(55, 127, true);
   chassis.wait_drive();
 
   chassis.set_turn_pid(-90, 127);
@@ -788,6 +889,12 @@ void skills(){
   wingouttask();
 
   Intake = -127;
+
+  chassis.set_drive_pid(60, 127, true);
+  chassis.wait_drive();
+
+  chassis.set_drive_pid(-50, 127, true);
+  chassis.wait_drive();
 
   chassis.set_drive_pid(50, 127, true);
   chassis.wait_drive();
@@ -840,7 +947,7 @@ void skills(){
   chassis.set_swing_pid(ez::RIGHT_SWING, -90, 127);
   chassis.wait_drive();
 
-  chassis.set_drive_pid(40, 127, true);
+  chassis.set_drive_pid(45, 127, true);
   chassis.wait_drive();
 
   chassis.set_drive_pid(-30, 127, true);
