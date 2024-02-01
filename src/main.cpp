@@ -25,7 +25,7 @@ Drive chassis (
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{10, 19, 17}
+  ,{10, 18, 17}
 
   // IMU Port
   ,14
@@ -206,7 +206,7 @@ void opcontrol() {
     //debugtest();
     setKicker();
     //setHang();
-    //setIntake();
+    setIntake();
     setWings();
     setBrakes();
 
@@ -226,12 +226,12 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
 
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+    /*if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
 
       Flywheel = 127;
       Kicker2 = 127;
 
-    }
+    }*/
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }

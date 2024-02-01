@@ -7,6 +7,9 @@ bool verthang = false;
 bool horizontalhang = false;
 bool bringdown = false;
 
+bool pastv = false;
+bool pasth = false;
+
 std::uint32_t now2 = pros::millis();
 
 pros::ADIDigitalOut PTO('C', false);
@@ -25,6 +28,8 @@ int setKicker(){
 
     if (kickerToggle){
 
+        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         PTO.set_value(false);
         Ratchet.set_value(false);
         Flywheel = 92.25;
@@ -38,7 +43,7 @@ int setKicker(){
 
         horizontalhang = true;
 
-    } else if (!kickerToggle and controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)){
+    } else if (!kickerToggle and controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
 
         bringdown = true;
 
@@ -60,16 +65,30 @@ int setKicker(){
         Flywheel.tare_position();
         Kicker2.tare_position();
 
-        if((Flywheel.get_raw_position(&now2) > -4850) and !(Flywheel.get_raw_position(&now2) < -4750)){
+        if ((Flywheel.get_position() > 1960)){
+
+            pastv = true;
+
+        }
+        
+        if((Flywheel.get_position() < 1960) and !pastv){
 
             Flywheel = -127;
             Kicker2 = -127;
 
-        } else {
-
-            verthang = false;
         }
         
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+
+            Flywheel = 127;
+            Kicker2 = 127;
+        }
+        
+
+    } else {
+
+        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
     }
 
@@ -82,20 +101,34 @@ int setKicker(){
         Flywheel.tare_position();
         Kicker2.tare_position();
 
-        if((Flywheel.get_raw_position(&now2) > -2550) and !(Flywheel.get_raw_position(&now2) < -2450)){
+        if((Flywheel.get_position() > 1052)){
+
+            pasth = true;
+
+        }
+        
+        if((Flywheel.get_position() < 1052) and !pasth){
 
             Flywheel = -127;
             Kicker2 = -127;
 
-        } else {
+        }
 
-            horizontalhang = false;
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+
+            Flywheel = 127;
+            Kicker2 = 127;
         }
         
 
+    } else {
+
+        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
     }
 
-    if (bringdown){
+    /*if (bringdown){
 
         PTO.set_value(true);
         Ratchet.set_value(false);
@@ -104,7 +137,7 @@ int setKicker(){
         Flywheel.tare_position();
         Kicker2.tare_position();
 
-        if((Flywheel.get_raw_position(&now2) < 5) and !(Flywheel.get_raw_position(&now2) < 0)){
+        if((Flywheel.get_raw_position(&now2) >= 0) ){
 
             Flywheel = 127;
             Kicker2 = 127;
@@ -115,42 +148,12 @@ int setKicker(){
         }
         
 
-    }
+    }*/
 
     return 0;
 
 }
 
-void setHang(){
-
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
-
-        PTO.set_value(true);
-        pros::delay(400);
-        Flywheel = -127;
-        Kicker2 = -127;
-
-    }
-
-    else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
-
-        PTO.set_value(true);
-        Ratchet.set_value(true);
-        pros::delay(400);
-        Flywheel = 127;
-        Kicker2 = 127;
-
-    }
-
-    else {
-
-        Flywheel = 0;
-        Kicker2 = 0;
-
-    }
-
-
-}
 
 void KickerON(){
 
