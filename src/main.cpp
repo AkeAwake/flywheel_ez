@@ -10,6 +10,8 @@
 #include "CustomHeaders/drive.hpp"
 #include "pros/misc.h"
 
+//float mowzer = 0;
+
 
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
@@ -93,8 +95,8 @@ void initialize() {
 
   // Initialize chassis and auton selector
   chassis.initialize();
-  ez::as::initialize();
-  //selector::init();
+  //ez::as::initialize();
+  selector::init();
 }
 
 
@@ -192,6 +194,7 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   //master.clear();
+  //master.print(0,0, "pose: %lf", Flywheel.get_position);
   //Intake.tare_position();
 
   while (true) {
@@ -205,10 +208,12 @@ void opcontrol() {
 
     //debugtest();
     setKicker();
-    //setHang();
     setIntake();
     setWings();
     setBrakes();
+
+    //mowzer = Flywheel.get_position();
+    //master.print(0,0, "pose: %lf", mowzer);
 
     //Intake = 12.7;
     //pros::delay(100);
@@ -218,7 +223,7 @@ void opcontrol() {
     
     //master.print(0, 0, "speed %d", Flywheel.get_voltage());
     //std::uint32_t now = pros::millis();
-    //master.print(0,0, "pose: %d", Intake.get_position());
+    //master.print(0,0, "pose: %lf", mowzer);
     //pros::lcd::print(0, "volts: %d", Intake.get_position());
     
     //setMatchload();

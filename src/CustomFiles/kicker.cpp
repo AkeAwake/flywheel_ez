@@ -1,6 +1,7 @@
 #include "main.h"
 
 bool kickerToggle = false;
+bool offToggle = true;
 bool pressedKickerToggle = false;
 
 bool verthang = false;
@@ -10,15 +11,20 @@ bool bringdown = false;
 bool pastv = false;
 bool pasth = false;
 
-std::uint32_t now2 = pros::millis();
+float pose = 0;
 
 pros::ADIDigitalOut PTO('C', false);
 pros::ADIDigitalOut Ratchet('D', false);
+pros::ADIDigitalOut leftmatchloadWing('F', false);
+pros::ADIDigitalOut rightmatchloadWing('B', false);
 
 int setKicker(){
 
+    pose = Flywheel.get_position();
+
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1) and !pressedKickerToggle) {
         kickerToggle = !kickerToggle;
+        offToggle = !offToggle;
         pressedKickerToggle = true;
     }
 
@@ -34,121 +40,121 @@ int setKicker(){
         Ratchet.set_value(false);
         Flywheel = 92.25;
         Kicker2 = 92.25;
+        leftmatchloadWing.set_value(true);
+        rightmatchloadWing.set_value(true);
 
-    } else if (!kickerToggle and controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)){
+    } else if (!kickerToggle and (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) and controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) and !verthang and !horizontalhang and !bringdown){
 
+        PTO.set_value(true);
+        Ratchet.set_value(false);
+        Flywheel.tare_position();
         verthang = true;
         
-    } else if (!kickerToggle and controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)){
+    } else if (!kickerToggle and controller.get_digital(pros::E_CONTROLLER_DIGITAL_X) and !verthang and !horizontalhang and !bringdown){
 
+        PTO.set_value(true);
+        Ratchet.set_value(false);
+        Flywheel.tare_position();
         horizontalhang = true;
 
-    } else if (!kickerToggle and controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+    } else if (!kickerToggle and controller.get_digital(pros::E_CONTROLLER_DIGITAL_B) and !bringdown){
 
+        PTO.set_value(true);
+        Ratchet.set_value(false);
         bringdown = true;
 
     }
 
     else {
 
-        Flywheel = 0;
-        Kicker2 = 0;
+        //Flywheel = 0;
+        // Kicker2 = 0;
+
+        leftmatchloadWing.set_value(false);
+        rightmatchloadWing.set_value(false);
+
+        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
     }
 
     if (verthang){
 
-        PTO.set_value(true);
-        Ratchet.set_value(false);
-        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        Flywheel.tare_position();
-        Kicker2.tare_position();
+        //Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        //Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-        if ((Flywheel.get_position() > 1960)){
+        if ((pose < -5050)){
 
+            Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            
+            Flywheel = 0;
+            Kicker2 = 0;
             pastv = true;
 
         }
         
-        if((Flywheel.get_position() < 1960) and !pastv){
+        if((pose > -5050) and !pastv){
 
-            Flywheel = -127;
-            Kicker2 = -127;
+            Flywheel.move_voltage(-12000);
+            Kicker2.move_voltage(-12000);
 
         }
         
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+        if (bringdown){
 
-            Flywheel = 127;
-            Kicker2 = 127;
+            if ((pose < 0)){
+
+                Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+                Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+                
+                Flywheel.move_voltage(12000);
+                Kicker2.move_voltage(12000);
+
+            }
         }
         
-
-    } else {
-
-        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
     }
 
     if (horizontalhang){
 
-        PTO.set_value(true);
-        Ratchet.set_value(false);
-        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        Flywheel.tare_position();
-        Kicker2.tare_position();
+        //Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        //Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
-        if((Flywheel.get_position() > 1052)){
+        if((pose < -2550)){
 
+            Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+            Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+            Flywheel = 0;
+            Kicker2 = 0;
             pasth = true;
 
         }
         
-        if((Flywheel.get_position() < 1052) and !pasth){
+        if((pose > -2550) and !pasth){
 
-            Flywheel = -127;
-            Kicker2 = -127;
+            Flywheel.move_voltage(-12000);
+            Kicker2.move_voltage(-12000);
 
         }
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+        if (bringdown){
 
-            Flywheel = 127;
-            Kicker2 = 127;
+            if ((pose < 0)){
+
+                Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+                Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+
+                Flywheel.move_voltage(12000);
+                Kicker2.move_voltage(12000);
+
+            }
         }
         
-
-    } else {
-
-        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
-        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
     }
-
-    /*if (bringdown){
-
-        PTO.set_value(true);
-        Ratchet.set_value(false);
-        Flywheel.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        Kicker2.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        Flywheel.tare_position();
-        Kicker2.tare_position();
-
-        if((Flywheel.get_raw_position(&now2) >= 0) ){
-
-            Flywheel = 127;
-            Kicker2 = 127;
-
-        } else {
-
-            bringdown = false;
-        }
-        
-
-    }*/
 
     return 0;
 

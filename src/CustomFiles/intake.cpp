@@ -13,7 +13,7 @@ void setIntake(){
 
         }
     
-        else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) and !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)/*and rotation_sensor.get_position() == 0*/){
+        else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) and !controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
 
             Intake = 127;
 
@@ -24,22 +24,6 @@ void setIntake(){
             Intake = 0;
 
         }
-    
-
-    
-    
-    /*if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1) and !pressed){
-
-        intaketoggle = !intaketoggle;
-        pressed = true;
-
-    }
-
-    else if(!(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1))){
-
-        pressed = false;
-
-    }*/
 
 }
 

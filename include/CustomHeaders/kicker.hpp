@@ -4,6 +4,8 @@
 
 int setKicker();
 
+void updateMotorPositionTask(void* param);
+
 void setHang();
 
 void KickerON();
